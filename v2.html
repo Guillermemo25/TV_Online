@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Álbum de Transmisiones en Vivo</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .album {
+      background-color: #f8f9fa;
+    }
+    .card-img-top {
+      height: 225px;
+      object-fit: cover;
+    }
+    .card{
+        cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container">
+      <a href="#" class="navbar-brand">
+        <strong>Transmisiones en Vivo</strong>
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- Sección de dedicatoria -->
+<section class="bg-light py-5 text-center">
+  <div class="container">
+    <h2 class="fw-bold mb-3">💖 Dedicado con amor</h2>
+    <p class="lead text-muted">
+        Para mi hermosa familia, mi esposa <strong>Ilse Arceo</strong> y para mis hijos <strong>David Guillermo</strong> y <strong>José Emilio</strong>, quienes son mi mayor inspiración día a día.
+    </p>
+  </div>
+</section>
+<main>
+  <section class="jumbotron text-center py-4">
+    <div class="container">
+      <h1 class="display-5 fw-bold">Televisora Cahuich Quetz</h1>
+    </div>
+  </section>
+
+  <div class="album py-5">
+    <div class="container">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="card-container">
+        <!-- Cards dinámicas -->
+      </div>
+    </div>
+  </div>
+</main>
+
+
+<footer class="text-muted py-5">
+  <div class="container">
+    <p class="float-end mb-1">
+      <a href="#">Volver arriba</a>
+    </p>
+    <p class="mb-1"></p>
+  </div>
+</footer>
+
+<!-- Modal para video -->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Video en Vivo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-0">
+        <iframe id="videoFrame" class="w-100" style="height:500px;" src="" allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const videos = [
+    {
+        titulo: "Canal 5",
+        descripcion: "Canal 5 de televisa.",
+        url: "https://embed.saohgdasregions.fun/embed/canal5.html",
+        img: "https://blob.cuartopoder.mx/images/2022/05/10/d14-4_1_1_642_482_0_0_0_0.jpg"
+    },
+    {
+        titulo: "Azteca 7",
+        descripcion: "Canal 7 de TV Azteca",
+        url: "https://embed.saohgdasregions.fun/embed/azteca7.html",
+        img: "https://i.ytimg.com/vi/IW8LEmt6A8A/maxresdefault.jpg"
+    }
+  ];
+
+  const container = document.getElementById("card-container");
+  const videoFrame = document.getElementById("videoFrame");
+  const videoModal = new bootstrap.Modal(document.getElementById('videoModal'));
+
+  videos.forEach(v => {
+    const col = document.createElement("div");
+    col.className = "col";
+    col.innerHTML = `
+      <div class="card shadow-sm h-100" onclick="abrirModal('${v.url}', '${v.titulo}')">
+        <img src="${v.img}" class="card-img-top" alt="${v.titulo}">
+        <div class="card-body">
+          <p class="card-text">${v.descripcion}</p>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">${v.titulo}</small>
+        </div>
+      </div>`;
+    container.appendChild(col);
+  });
+
+  function abrirModal(url, titulo) {
+    document.querySelector("#videoModal .modal-title").textContent = titulo;
+    videoFrame.src = url + "?autoplay=1";
+    videoModal.show();
+  }
+
+  document.getElementById('videoModal').addEventListener('hidden.bs.modal', () => {
+    videoFrame.src = "";
+  });
+</script>
+</body>
+</html>
