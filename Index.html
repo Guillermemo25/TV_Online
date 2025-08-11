@@ -2,130 +2,392 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <title>Videos en Vivo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Álbum de Transmisiones en Vivo</title>
+  <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
   <style>
-    .album {
-      background-color: #f8f9fa;
+    body {
+      background-color: #f4f6f9;
     }
-    .card-img-top {
-      height: 225px;
-      object-fit: cover;
+    .card-custom {
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  cursor: pointer;
+  height: 100%;
+}
+
+.card-custom:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.card-custom img {
+  height: 180px;
+  width: 100%;
+  object-fit: contain;
+  background-color: #f8f9fa; /* Fondo para que no se vea vacío */
+  padding: 10px;
+}
+
+
+.card-body {
+  padding: 15px;
+  background-color: #fff;
+}
+
+.card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.card-text {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+    .modal-dialog {
+      max-width: 900px;
     }
-    .card{
-        cursor: pointer;
+    .modal-body {
+      padding: 0;
+    }
+    .video-iframe {
+      width: 100%;
+      height: 500px;
+      border: none;
     }
   </style>
+  <style>
+  #accessModal input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+  }
+</style>
+
 </head>
 <body>
 
-<header>
-  <div class="navbar navbar-dark bg-dark shadow-sm">
-    <div class="container">
-      <a href="#" class="navbar-brand">
-        <strong>Transmisiones en Vivo</strong>
-      </a>
-    </div>
+<div class="container mt-5">
+  <h2 class="text-center mb-5">🎥 Canales en Vivo</h2>
+  <div id="card-container">
+    <!-- Secciones con encabezados y filas se generarán aquí -->
   </div>
-</header>
-
-<!-- Sección de dedicatoria -->
-<section class="bg-light py-5 text-center">
-  <div class="container">
-    <h2 class="fw-bold mb-3">💖 Dedicado con amor</h2>
-    <p class="lead text-muted">
-        Para mi hermosa familia, mi esposa <strong>Ilse Arceo</strong> y para mis hijos <strong>David Guillermo</strong> y <strong>José Emilio</strong>, quienes son mi mayor inspiración día a día.
-    </p>
-  </div>
-</section>
-<main>
-  <section class="jumbotron text-center py-4">
-    <div class="container">
-      <h1 class="display-5 fw-bold">Televisora Cahuich Quetz</h1>
-    </div>
-  </section>
-
-  <div class="album py-5">
-    <div class="container">
-      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="card-container">
-        <!-- Cards dinámicas -->
-      </div>
-    </div>
-  </div>
-</main>
+</div>
 
 
-<footer class="text-muted py-5">
-  <div class="container">
-    <p class="float-end mb-1">
-      <a href="#">Volver arriba</a>
-    </p>
-    <p class="mb-1"></p>
-  </div>
-</footer>
-
-<!-- Modal para video -->
-<div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+<!-- MODAL -->
+<div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-xl">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Video en Vivo</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <h5 class="modal-title" id="videoModalLabel">Video en Vivo</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
       </div>
-      <div class="modal-body p-0">
-        <iframe id="videoFrame" class="w-100" style="height:500px;" src="" allowfullscreen></iframe>
+      <div class="modal-body">
+        <iframe id="videoFrame" class="video-iframe" src="" allowfullscreen></iframe>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Modal de acceso -->
+<div class="modal fade" id="accessModal" tabindex="-1" aria-labelledby="accessModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+      <div class="modal-header">
+        <h5 class="modal-title" id="accessModalLabel">🔐 Acceso restringido</h5>
+      </div>
+      <div class="modal-body mt-2">
+        <p>Escribe tu usuario para acceder:</p>
+        <input type="text" id="userInput" class="form-control" placeholder="Tu nombre o correo">
+        <div id="errorMsg" class="text-danger mt-2" style="display: none;">❌ Usuario no autorizado</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btnValidar" class="btn btn-primary">Ingresar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
+  // 🎬 Datos de los videos
   const videos = [
-    {
-        titulo: "Canal 5",
-        descripcion: "Canal 5 de televisa.",
-        url: "https://embed.saohgdasregions.fun/embed/canal5.html",
-        img: "https://blob.cuartopoder.mx/images/2022/05/10/d14-4_1_1_642_482_0_0_0_0.jpg"
-    },
-    {
-        titulo: "Azteca 7",
-        descripcion: "Canal 7 de TV Azteca",
-        url: "https://embed.saohgdasregions.fun/embed/azteca7.html",
-        img: "https://i.ytimg.com/vi/IW8LEmt6A8A/maxresdefault.jpg"
-    }
-  ];
+  {
+    titulo: "Animal Planet",
+    descripcion: "Canal de documentales sobre animales y naturaleza.",
+    url: "https://embed.saohgdasregions.fun/embed/animalplanet.html",
+    img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Animal_Planet.png",
+    clasificacion: "Documentales"
+  },
+  {
+    titulo: "Discovery Channel",
+    descripcion: "Documentales sobre ciencia, naturaleza y cultura.",
+    url: "https://embed.saohgdasregions.fun/embed/discoverychannel.html",
+    img: "https://images.seeklogo.com/logo-png/4/1/discovery-channel-logo-png_seeklogo-41901.png",
+    clasificacion: "Documentales"
+  },
+  {
+    titulo: "History",
+    descripcion: "Canal documental sobre historia y ciencia.",
+    url: "https://embed.saohgdasregions.fun/embed/history.html",
+    img: "https://images.seeklogo.com/logo-png/22/1/the-history-channel-logo-png_seeklogo-222414.png",
+    clasificacion: "Documentales"
+  },
+  {
+    titulo: "Nat Geo",
+    descripcion: "Canal de ciencia, naturaleza y exploración.",
+    url: "https://embed.saohgdasregions.fun/embed/natgeo.html",
+    img: "https://thumbs.dreamstime.com/b/national-geographic-channel-logo-vector-format-available-illustrator-ai-national-geographic-channel-logo-148310928.jpg",
+    clasificacion: "Documentales"
+  },
+  {
+    titulo: "Azteca Uno",
+    descripcion: "Canal mexicano con programación general.",
+    url: "https://embed.saohgdasregions.fun/embed/aztecauno.html",
+    img: "https://images.seeklogo.com/logo-png/43/2/azteca-uno-logo-png_seeklogo-430704.png",
+    clasificacion: "Entretenimiento"
+  },
+  {
+    titulo: "Azteca 7",
+    descripcion: "Canal de televisión mexicana con programación general.",
+    url: "https://embed.saohgdasregions.fun/embed/azteca7.html",
+    img: "https://www.mundoprotegido.com/wp-content/uploads/2023/03/como-ver-azteca-7-en-vivo.png",
+    clasificacion: "Entretenimiento"
+  },
+  {
+    titulo: "Canal 5",
+    descripcion: "Canal de entretenimiento con series, películas y caricaturas.",
+    url: "https://embed.saohgdasregions.fun/embed/canal5.html",
+    img: "https://upload.wikimedia.org/wikipedia/commons/0/07/Logotipo-Canal-5-M%C3%A9xico.png",
+    clasificacion: "Entretenimiento"
+  },
+  {
+    titulo: "Distrito Comedia",
+    descripcion: "Canal de comedia con programación mexicana.",
+    url: "https://embed.saohgdasregions.fun/embed/distritocomedia.html",
+    img: "https://upload.wikimedia.org/wikipedia/commons/0/09/Logo_Distrito_Comedia.png",
+    clasificacion: "Entretenimiento"
+  },
+  {
+    titulo: "Las Estrellas",
+    descripcion: "Canal principal de Televisa con novelas y entretenimiento.",
+    url: "https://embed.saohgdasregions.fun/embed/lasestrellas.html",
+    img: "https://upload.wikimedia.org/wikipedia/commons/4/4f/Las_Estrellas_logo_%282016%29.png",
+    clasificacion: "Entretenimiento"
+  },
+  {
+    titulo: "TLNovelas",
+    descripcion: "Canal dedicado a telenovelas mexicanas.",
+    url: "https://embed.saohgdasregions.fun/embed/tlnovelas.html",
+    img: "https://cdn.mitvstatic.com/channels/mx_tlnovelas_m.png",
+    clasificacion: "Entretenimiento"
+  },
+  {
+    titulo: "Cartoon Network",
+    descripcion: "Canal de caricaturas y series animadas.",
+    url: "https://embed.saohgdasregions.fun/embed/cartoonnetwork.html",
+    img: "https://upload.wikimedia.org/wikipedia/commons/f/fe/CARTOON_NETWORK_logo.png",
+    clasificacion: "Infantil"
+  },
+  {
+    titulo: "Disney Channel",
+    descripcion: "Canal juvenil con series y películas de Disney.",
+    url: "https://embed.saohgdasregions.fun/embed/disneychannel.html",
+    img: "https://cdn.mitvstatic.com/channels/cl_disney-channel_m.png",
+    clasificacion: "Infantil"
+  },
+  {
+    titulo: "Disney JR",
+    descripcion: "Canal infantil de Disney para niños pequeños.",
+    url: "https://embed.saohgdasregions.fun/embed/disneyjr.html",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZWyVcgbta5_RL2K2EPgrPiK-DrW7icmSCNQ&s",
+    clasificacion: "Infantil"
+  },
+  {
+    titulo: "Tooncast",
+    descripcion: "Canal de caricaturas clásicas.",
+    url: "https://embed.saohgdasregions.fun/embed/tooncast.html",
+    img: "https://upload.wikimedia.org/wikipedia/commons/6/66/Tooncast.png",
+    clasificacion: "Infantil"
+  },
+  {
+    titulo: "ESPN",
+    descripcion: "Canal líder en deportes internacionales.",
+    url: "https://embed.saohgdasregions.fun/embed/espnmexico.html",
+    img: "https://pbs.twimg.com/profile_images/856564125455065089/MAJ4Buek_400x400.jpg",
+    clasificacion: "Deportes"
+  },
+  {
+    titulo: "Fox Sports",
+    descripcion: "Canal deportivo con transmisiones en vivo.",
+    url: "https://embed.saohgdasregions.fun/embed/foxsportsmexico.html",
+    img: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Fox_Sports_M%C3%A9xico_Logo_2022.png",
+    clasificacion: "Deportes"
+  },
+  {
+    titulo: "Cinemax",
+    descripcion: "Canal de cine con películas de estreno.",
+    url: "https://embed.saohgdasregions.fun/embed/cinemax.html",
+    img: "https://download.logo.wine/logo/Cinemax/Cinemax-Logo.wine.png",
+    clasificacion: "Cine y Series"
+  },
+  {
+    titulo: "FX",
+    descripcion: "Canal de series y películas para adultos.",
+    url: "https://embed.saohgdasregions.fun/embed/fx.html",
+    img: "https://images.seeklogo.com/logo-png/30/2/fx-tv-channel-logo-png_seeklogo-307536.png",
+    clasificacion: "Cine y Series"
+  },
+  {
+    titulo: "Golden Edge",
+    descripcion: "Canal de películas de acción y suspenso.",
+    url: "https://embed.saohgdasregions.fun/embed/goldenedge.html",
+    img: "https://upload.wikimedia.org/wikipedia/commons/3/32/Golden_Edge_Logo.png",
+    clasificacion: "Cine y Series"
+  },
+  {
+    titulo: "Space",
+    descripcion: "Canal de películas de acción, terror y suspenso.",
+    url: "https://embed.saohgdasregions.fun/embed/space.html",
+    img: "https://logos-world.net/wp-content/uploads/2023/03/Space-Logo.png",
+    clasificacion: "Cine y Series"
+  },
+  {
+    titulo: "Star Channel",
+    descripcion: "Canal de películas y series populares.",
+    url: "https://embed.saohgdasregions.fun/embed/starchannel.html",
+    img: "https://images.seeklogo.com/logo-png/40/2/star-channel-logo-png_seeklogo-403871.png",
+    clasificacion: "Cine y Series"
+  },
+  {
+    titulo: "Studio Universal",
+    descripcion: "Películas y contenido de Universal Studios.",
+    url: "https://embed.saohgdasregions.fun/embed/studiouniversal.html",
+    img: "https://cdn.mitvstatic.com/channels/fd8cde27-1fa8-46f4-a2ff-96436bbe6912_m.jpg",
+    clasificacion: "Cine y Series"
+  },
+  {
+    titulo: "TNT",
+    descripcion: "Películas, series y transmisiones en vivo.",
+    url: "https://embed.saohgdasregions.fun/embed/tnt.html",
+    img: "https://upload.wikimedia.org/wikipedia/commons/6/68/Logo_TNT_Series.png",
+    clasificacion: "Cine y Series"
+  },
+  {
+    titulo: "Warner Bros",
+    descripcion: "Series y películas de Warner Channel.",
+    url: "https://embed.saohgdasregions.fun/embed/warnerchannel.html",
+    img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Warner2018LA.png/250px-Warner2018LA.png",
+    clasificacion: "Cine y Series"
+  }
+];
+
+
 
   const container = document.getElementById("card-container");
   const videoFrame = document.getElementById("videoFrame");
   const videoModal = new bootstrap.Modal(document.getElementById('videoModal'));
 
-  videos.forEach(v => {
+// 1. Agrupar por clasificación
+const clasificaciones = {};
+
+videos.forEach(video => {
+  if (!clasificaciones[video.clasificacion]) {
+    clasificaciones[video.clasificacion] = [];
+  }
+  clasificaciones[video.clasificacion].push(video);
+});
+
+// 2. Renderizar secciones
+Object.keys(clasificaciones).sort().forEach(clasificacion => {
+  // Crear título de la sección
+  const sectionTitle = document.createElement("h3");
+  sectionTitle.className = "mt-5 mb-3 text-secondary border-bottom pb-2";
+  sectionTitle.textContent = `📂 ${clasificacion}`;
+  container.appendChild(sectionTitle);
+
+  // Crear fila de cards
+  const row = document.createElement("div");
+  row.className = "row";
+
+  clasificaciones[clasificacion].forEach(video => {
     const col = document.createElement("div");
-    col.className = "col";
+    col.className = "col-sm-6 col-md-4 col-lg-3 mb-4";
+
     col.innerHTML = `
-      <div class="card shadow-sm h-100" onclick="abrirModal('${v.url}', '${v.titulo}')">
-        <img src="${v.img}" class="card-img-top" alt="${v.titulo}">
+      <div class="card card-custom h-100" onclick="abrirModal('${video.url}', '${video.titulo}')">
+        <img src="${video.img}" class="card-img-top" alt="${video.titulo}">
         <div class="card-body">
-          <p class="card-text">${v.descripcion}</p>
+          <h5 class="card-title">${video.titulo}</h5>
+          <p class="card-text">${video.descripcion}</p>
         </div>
-        <div class="card-footer">
-          <small class="text-muted">${v.titulo}</small>
-        </div>
-      </div>`;
-    container.appendChild(col);
+      </div>
+    `;
+
+    row.appendChild(col);
   });
 
+  container.appendChild(row);
+});
+
+
+  // Abrir modal con video
   function abrirModal(url, titulo) {
-    document.querySelector("#videoModal .modal-title").textContent = titulo;
-    videoFrame.src = url + "?autoplay=1";
+    document.getElementById("videoModalLabel").textContent = titulo;
+    videoFrame.src = url + "?autoplay=1"; // autoplay opcional
     videoModal.show();
   }
 
+  // Limpiar el iframe al cerrar el modal
   document.getElementById('videoModal').addEventListener('hidden.bs.modal', () => {
     videoFrame.src = "";
   });
+
+
+//   const usuariosPermitidos = ["GuillermoCahuich", "IlseArceo", "EdilbertoMartinez"];
+
+// // Solicita correo al entrar
+// const correo = prompt("Ingresa tu correo para acceder:");
+
+// if (!usuariosPermitidos.includes(correo)) {
+//   alert("Acceso denegado. Usuario no autorizado.");
+//   document.body.innerHTML = "<h2 style='color:red; text-align:center; margin-top: 50px;'>🚫 Acceso no autorizado</h2>";
+// }
+
 </script>
+
+<script>
+  // Lista de usuarios permitidos
+  const usuariosPermitidos = ["GuillermoCahuich", "IlseArceo", "EdilbertoMartinez"];
+
+  // Mostrar modal al cargar
+  window.addEventListener('DOMContentLoaded', () => {
+    const modal = new bootstrap.Modal(document.getElementById('accessModal'));
+    modal.show();
+
+    document.getElementById('btnValidar').addEventListener('click', () => {
+      const userInput = document.getElementById('userInput').value.trim();
+      const errorMsg = document.getElementById('errorMsg');
+
+      if (usuariosPermitidos.includes(userInput)) {
+        modal.hide();
+      } else {
+        errorMsg.style.display = 'block';
+      }
+    });
+  });
+</script>
+
+
 </body>
 </html>
