@@ -1,7 +1,7 @@
 const CACHE_NAME = 'canales-vivo-cache-v1';
 const urlsToCache = [
   '.',
-  'v1.html',
+  'Index.html',
   'manifest.json',
   'icons/icon-192x192.png',
   'icons/icon-512x512.png',
