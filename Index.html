@@ -8,6 +8,11 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#007bff">
+<link rel="icon" href="icons/icon-192x192.png">
+
+
   <style>
     body {
       background-color: #eceef3;
@@ -97,6 +102,9 @@
     </div>
 
     <h2 class="text-center mb-5">🎥 Canales en Vivo</h2>
+<button id="installBtn" class="btn btn-primary" style="display: none;">
+  📲 Instalar aplicación
+</button>
     <div id="card-container">
       <!-- Secciones con encabezados y filas se generarán aquí -->
     </div>
@@ -148,6 +156,51 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
+
+    if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(reg => console.log('Service Worker registrado:', reg.scope))
+      .catch(err => console.error('Error SW:', err));
+  });
+}
+
+let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Previene que el navegador muestre el prompt automáticamente
+  e.preventDefault();
+  deferredPrompt = e;
+
+  // Muestra el botón de instalación
+  const installBtn = document.getElementById('installBtn');
+  installBtn.style.display = 'inline-block';
+
+  installBtn.addEventListener('click', () => {
+    // Mostrar el prompt de instalación
+    deferredPrompt.prompt();
+
+    // Esperar la elección del usuario
+    deferredPrompt.userChoice.then(choiceResult => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('👍 Usuario aceptó la instalación');
+        installBtn.style.display = 'none'; // Ocultar el botón después
+      } else {
+        console.log('👎 Usuario canceló la instalación');
+      }
+      deferredPrompt = null;
+    });
+  });
+});
+
+// Evita mostrar el botón si ya está instalada
+window.addEventListener('appinstalled', () => {
+  console.log('✅ App instalada');
+  document.getElementById('installBtn').style.display = 'none';
+});
+
+
+
     // 🎬 Datos de los videos
     const videos = [
       {
