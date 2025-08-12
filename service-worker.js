@@ -1,12 +1,13 @@
 const CACHE_NAME = 'canales-vivo-cache-v1';
 const urlsToCache = [
   '.',
-  'Index.html',
+  'index.html',
   'manifest.json',
   'icons/icon-192x192.png',
   'icons/icon-512x512.png',
   'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css',
-  'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'
+  'https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js',
+  'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js'
   // Agrega aquí otros recursos estáticos que uses
 ];
 

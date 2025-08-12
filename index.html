@@ -3,14 +3,14 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Videos en Vivo</title>
+  <title>TV Online</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
   <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#007bff">
-<link rel="icon" href="icons/icon-192x192.png">
+  <meta name="theme-color" content="#007bff">
+  <link rel="icon" href="icons/icon-192x192.png">
 
 
   <style>
@@ -86,7 +86,7 @@
       box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
     }
   </style>
-<!-- Firebase SDK v8 para compatibilidad sin modules -->
+  <!-- Firebase SDK v8 para compatibilidad sin modules -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <!-- Se corrigió a Firebase v8 para que 'firebase' esté definido -->
@@ -102,9 +102,9 @@
     </div>
 
     <h2 class="text-center mb-5">🎥 Canales en Vivo</h2>
-<button id="installBtn" class="btn btn-primary" style="display: none;">
-  📲 Instalar aplicación
-</button>
+    <button id="installBtn" class="btn btn-primary" style="display: none;">
+      📲 Instalar aplicación
+    </button>
     <div id="card-container">
       <!-- Secciones con encabezados y filas se generarán aquí -->
     </div>
@@ -120,10 +120,8 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body position-relative">
-          <iframe id="videoFrame" class="video-iframe"
-            src="https://embed.saohgdasregions.fun/embed/animalplanet.html"
-            width="100%" height="500" frameborder="0" scrolling="no" allowfullscreen
-            sandbox="allow-same-origin allow-scripts allow-presentation">
+          <iframe id="videoFrame" class="video-iframe" src="javascript:void(0)" width="100%" height="500" frameborder="0" scrolling="no"
+            allowfullscreen sandbox="allow-same-origin allow-scripts allow-presentation">
           </iframe>
         </div>
 
@@ -158,52 +156,51 @@
   <script>
 
     if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('service-worker.js')
-      .then(reg => console.log('Service Worker registrado:', reg.scope))
-      .catch(err => console.error('Error SW:', err));
-  });
-}
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => console.log('Service Worker registrado:', reg.scope))
+          .catch(err => console.error('Error SW:', err));
+      });
+    }
 
-let deferredPrompt;
+    let deferredPrompt;
 
-window.addEventListener('beforeinstallprompt', (e) => {
-  // Previene que el navegador muestre el prompt automáticamente
-  e.preventDefault();
-  deferredPrompt = e;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      // Previene que el navegador muestre el prompt automáticamente
+      e.preventDefault();
+      deferredPrompt = e;
 
-  // Muestra el botón de instalación
-  const installBtn = document.getElementById('installBtn');
-  installBtn.style.display = 'inline-block';
+      // Muestra el botón de instalación
+      const installBtn = document.getElementById('installBtn');
+      installBtn.style.display = 'inline-block';
 
-  installBtn.addEventListener('click', () => {
-    // Mostrar el prompt de instalación
-    deferredPrompt.prompt();
+      installBtn.addEventListener('click', () => {
+        // Mostrar el prompt de instalación
+        deferredPrompt.prompt();
 
-    // Esperar la elección del usuario
-    deferredPrompt.userChoice.then(choiceResult => {
-      if (choiceResult.outcome === 'accepted') {
-        console.log('👍 Usuario aceptó la instalación');
-        installBtn.style.display = 'none'; // Ocultar el botón después
-      } else {
-        console.log('👎 Usuario canceló la instalación');
-      }
-      deferredPrompt = null;
+        // Esperar la elección del usuario
+        deferredPrompt.userChoice.then(choiceResult => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('👍 Usuario aceptó la instalación');
+            installBtn.style.display = 'none'; // Ocultar el botón después
+          } else {
+            console.log('👎 Usuario canceló la instalación');
+          }
+          deferredPrompt = null;
+        });
+      });
     });
-  });
-});
 
-// Evita mostrar el botón si ya está instalada
-window.addEventListener('appinstalled', () => {
-  console.log('✅ App instalada');
-  document.getElementById('installBtn').style.display = 'none';
-});
-
-
+    // Evita mostrar el botón si ya está instalada
+    window.addEventListener('appinstalled', () => {
+      console.log('✅ App instalada');
+      document.getElementById('installBtn').style.display = 'none';
+    });
 
     // 🎬 Datos de los videos
     const videos = [
       {
+        id: 1,
         titulo: "Animal Planet",
         descripcion: "Canal de documentales sobre animales y naturaleza.",
         url: "https://embed.saohgdasregions.fun/embed/animalplanet.html",
@@ -211,6 +208,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Documentales"
       },
       {
+        id: 2,
         titulo: "Discovery Channel",
         descripcion: "Documentales sobre ciencia, naturaleza y cultura.",
         url: "https://embed.saohgdasregions.fun/embed/discoverychannel.html",
@@ -218,6 +216,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Documentales"
       },
       {
+        id: 3,
         titulo: "History",
         descripcion: "Canal documental sobre historia y ciencia.",
         url: "https://embed.saohgdasregions.fun/embed/history.html",
@@ -225,6 +224,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Documentales"
       },
       {
+        id: 4,
         titulo: "Nat Geo",
         descripcion: "Canal de ciencia, naturaleza y exploración.",
         url: "https://embed.saohgdasregions.fun/embed/natgeo.html",
@@ -232,6 +232,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Documentales"
       },
       {
+        id: 5,
         titulo: "Azteca Uno",
         descripcion: "Canal mexicano con programación general.",
         url: "https://embed.saohgdasregions.fun/embed/aztecauno.html",
@@ -239,6 +240,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Entretenimiento"
       },
       {
+        id: 6,
         titulo: "Azteca 7",
         descripcion: "Canal de televisión mexicana con programación general.",
         url: "https://embed.saohgdasregions.fun/embed/azteca7.html",
@@ -246,6 +248,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Entretenimiento"
       },
       {
+        id: 7,
         titulo: "Canal 5",
         descripcion: "Canal de entretenimiento con series, películas y caricaturas.",
         url: "https://embed.saohgdasregions.fun/embed/canal5.html",
@@ -253,6 +256,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Entretenimiento"
       },
       {
+        id: 8,
         titulo: "Distrito Comedia",
         descripcion: "Canal de comedia con programación mexicana.",
         url: "https://embed.saohgdasregions.fun/embed/distritocomedia.html",
@@ -260,6 +264,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Entretenimiento"
       },
       {
+        id: 9,
         titulo: "Las Estrellas",
         descripcion: "Canal principal de Televisa con novelas y entretenimiento.",
         url: "https://embed.saohgdasregions.fun/embed/lasestrellas.html",
@@ -267,6 +272,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Entretenimiento"
       },
       {
+        id: 10,
         titulo: "TLNovelas",
         descripcion: "Canal dedicado a telenovelas mexicanas.",
         url: "https://embed.saohgdasregions.fun/embed/tlnovelas.html",
@@ -274,6 +280,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Entretenimiento"
       },
       {
+        id: 11,
         titulo: "Cartoon Network",
         descripcion: "Canal de caricaturas y series animadas.",
         url: "https://embed.saohgdasregions.fun/embed/cartoonnetwork.html",
@@ -281,6 +288,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Infantil"
       },
       {
+        id: 12,
         titulo: "Disney Channel",
         descripcion: "Canal juvenil con series y películas de Disney.",
         url: "https://embed.saohgdasregions.fun/embed/disneychannel.html",
@@ -288,6 +296,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Infantil"
       },
       {
+        id: 13,
         titulo: "Disney JR",
         descripcion: "Canal infantil de Disney para niños pequeños.",
         url: "https://embed.saohgdasregions.fun/embed/disneyjr.html",
@@ -295,6 +304,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Infantil"
       },
       {
+        id: 14,
         titulo: "Tooncast",
         descripcion: "Canal de caricaturas clásicas.",
         url: "https://embed.saohgdasregions.fun/embed/tooncast.html",
@@ -302,6 +312,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Infantil"
       },
       {
+        id: 15,
         titulo: "ESPN",
         descripcion: "Canal líder en deportes internacionales.",
         url: "https://embed.saohgdasregions.fun/embed/espnmexico.html",
@@ -309,6 +320,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Deportes"
       },
       {
+        id: 16,
         titulo: "Fox Sports",
         descripcion: "Canal deportivo con transmisiones en vivo.",
         url: "https://embed.saohgdasregions.fun/embed/foxsportsmexico.html",
@@ -316,6 +328,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Deportes"
       },
       {
+        id: 17,
         titulo: "Cinemax",
         descripcion: "Canal de cine con películas de estreno.",
         url: "https://embed.saohgdasregions.fun/embed/cinemax.html",
@@ -323,6 +336,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Cine y Series"
       },
       {
+        id: 18,
         titulo: "FX",
         descripcion: "Canal de series y películas para adultos.",
         url: "https://embed.saohgdasregions.fun/embed/fx.html",
@@ -330,6 +344,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Cine y Series"
       },
       {
+        id: 19,
         titulo: "Golden Edge",
         descripcion: "Canal de películas de acción y suspenso.",
         url: "https://embed.saohgdasregions.fun/embed/goldenedge.html",
@@ -337,6 +352,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Cine y Series"
       },
       {
+        id: 20,
         titulo: "Space",
         descripcion: "Canal de películas de acción, terror y suspenso.",
         url: "https://embed.saohgdasregions.fun/embed/space.html",
@@ -344,6 +360,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Cine y Series"
       },
       {
+        id: 21,
         titulo: "Star Channel",
         descripcion: "Canal de películas y series populares.",
         url: "https://embed.saohgdasregions.fun/embed/starchannel.html",
@@ -351,6 +368,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Cine y Series"
       },
       {
+        id: 22,
         titulo: "Studio Universal",
         descripcion: "Películas y contenido de Universal Studios.",
         url: "https://embed.saohgdasregions.fun/embed/studiouniversal.html",
@@ -358,6 +376,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Cine y Series"
       },
       {
+        id: 23,
         titulo: "TNT",
         descripcion: "Películas, series y transmisiones en vivo.",
         url: "https://embed.saohgdasregions.fun/embed/tnt.html",
@@ -365,6 +384,7 @@ window.addEventListener('appinstalled', () => {
         clasificacion: "Cine y Series"
       },
       {
+        id: 24,
         titulo: "Warner Bros",
         descripcion: "Series y películas de Warner Channel.",
         url: "https://embed.saohgdasregions.fun/embed/warnerchannel.html",
@@ -433,7 +453,7 @@ window.addEventListener('appinstalled', () => {
       videoFrame.src = "";
     });
 
-
+    // Reportar canal por medio de whatsapp
     function reportarCanal(event, canal) {
       event.stopPropagation();
 
@@ -446,137 +466,180 @@ window.addEventListener('appinstalled', () => {
 
   </script>
   <script>
-  // ✅ Lista de usuarios permitidos
-  const usuariosPermitidos = [
-    { nombre: "GuillermoCahuich", expira: "2100-01-01" },
-    { nombre: "EdilbertoMartinez", expira: "2025-08-15" },
-    { nombre: "IlseArceo", expira: "2099-12-31" },
-    { nombre: "PruebasAgosto", expira: "2025-08-31" },
-    { nombre: "PruebasSeptiembre", expira: "2025-09-01" }
-  ];
+    // Se le pone el día siguiente de su expiración por ejemplo 
+    // El usuario GuillermoCahuich expira solo puede entrar hasta el 31 de agosto
+    // Su expiración debe ser el 1 de septiembre
+    // ✅ Lista de usuarios permitidos
+    const usuariosPermitidos = [
+      { nombre: "GuillermoCahuich", expira: "2100-01-01" },
+      { nombre: "EdilbertoMartinez", expira: "2025-08-15" },
+      { nombre: "IlseArceo", expira: "2100-01-01" },
+      { nombre: "Agosto11", expira: "2025-08-12" },
+      { nombre: "Agosto12", expira: "2025-08-13" },
+      { nombre: "Agosto13", expira: "2025-08-14" },
+      { nombre: "Agosto14", expira: "2025-08-15" },
+      { nombre: "Agosto15", expira: "2025-08-16" },
+      { nombre: "Agosto16", expira: "2025-08-17" },
+      { nombre: "Agosto17", expira: "2025-08-18" },
+      { nombre: "Agosto18", expira: "2025-08-19" },
+      { nombre: "Agosto19", expira: "2025-08-20" },
+      { nombre: "Agosto20", expira: "2025-08-21" },
+      { nombre: "PruebasSeptiembre", expira: "2025-09-01" }
+    ];
 
-  // ✅ Firebase Config
-  const firebaseConfig = {
-    apiKey: "AIzaSyAFLwKrplfCUQ4CEOPECEsvz3l9wCcu1LQ",
-    authDomain: "memorias-familia.firebaseapp.com",
-    projectId: "memorias-familia",
-    storageBucket: "memorias-familia.appspot.com",
-    messagingSenderId: "1031674093779",
-    appId: "1:1031674093779:web:a5767556435cf15e763426"
-  };
-
-  // ✅ Inicializar Firebase
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-
-  window.addEventListener('DOMContentLoaded', () => {
-    const modalElement = document.getElementById('accessModal');
-    const modal = new bootstrap.Modal(modalElement);
-    const input = document.getElementById('userInput');
-    const errorMsg = document.getElementById('errorMsg');
-    const userInfo = document.getElementById('user-info');
-    const nombreUsuarioSpan = document.getElementById('nombre-usuario');
-    const hoy = new Date().toISOString().split("T")[0];
-
-    const mostrarUsuario = (nombre) => {
-      nombreUsuarioSpan.textContent = `👤 ${nombre}`;
-      userInfo.style.display = "flex";
+    // ✅ Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyAFLwKrplfCUQ4CEOPECEsvz3l9wCcu1LQ",
+      authDomain: "memorias-familia.firebaseapp.com",
+      projectId: "memorias-familia",
+      storageBucket: "memorias-familia.appspot.com",
+      messagingSenderId: "1031674093779",
+      appId: "1:1031674093779:web:a5767556435cf15e763426"
     };
 
-    // ✅ Verificar sesión local
-    const sesionGuardada = JSON.parse(localStorage.getItem("usuarioPermitido"));
-    if (sesionGuardada) {
-      const userObj = usuariosPermitidos.find(u => u.nombre === sesionGuardada.nombre);
-      if (userObj && hoy <= userObj.expira) {
-        mostrarUsuario(userObj.nombre);
-        return;
-      } else {
-        localStorage.removeItem("usuarioPermitido");
+    // ✅ Inicializar Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const modalElement = document.getElementById('accessModal');
+      const modal = new bootstrap.Modal(modalElement);
+      const input = document.getElementById('userInput');
+      const errorMsg = document.getElementById('errorMsg');
+      const userInfo = document.getElementById('user-info');
+      const nombreUsuarioSpan = document.getElementById('nombre-usuario');
+      const hoy = new Date().toISOString().split("T")[0];
+
+      // ✅ Función para mostrar el usuario identificado
+      const mostrarUsuario = (nombre) => {
+        nombreUsuarioSpan.textContent = `👤 ${nombre}`;
+        userInfo.style.display = "flex";
+      };
+
+      // ✅ Verificar sesión local
+      const sesionGuardada = JSON.parse(localStorage.getItem("usuarioPermitido"));
+      if (sesionGuardada) {
+        const userObj = usuariosPermitidos.find(u => u.nombre.toUpperCase() === sesionGuardada.nombre.toUpperCase());
+        if (userObj && hoy <= userObj.expira) {
+          mostrarUsuario(userObj.nombre);
+          return;
+        } else {
+          localStorage.removeItem("usuarioPermitido");
+        }
       }
-    }
 
-    // ✅ Mostrar modal si no tiene sesión
-    modal.show();
+      // ✅ Mostrar modal si no tiene sesión
+      modal.show();
 
-    const validar = () => {
-      const valor = input.value.trim();
-      const userObj = usuariosPermitidos.find(u => u.nombre === valor);
-
-      if (userObj && hoy <= userObj.expira) {
-        const ref = firebase.database().ref("usuarios/" + userObj.nombre.toLowerCase());
-
-        // ✅ Verifica si ya hay una sesión activa en Firebase
-        ref.once("value").then(snapshot => {
-          if (snapshot.exists()) {
-            errorMsg.textContent = "⚠️ Este usuario ya inició sesión en otro dispositivo.";
-            errorMsg.style.display = 'block';
-            enviarCorreo(userObj.nombre);
-          } else {
-            // ✅ Registrar sesión en Firebase
-            ref.set({
-              activo: true,
-              timestamp: new Date().toISOString()
-            });
-
-            // ✅ Guardar sesión local
-            localStorage.setItem("usuarioPermitido", JSON.stringify({ nombre: userObj.nombre }));
-            mostrarUsuario(userObj.nombre);
-            modal.hide();
-          }
-        }).catch(error => {
-          console.error("Error Firebase:", error);
-          errorMsg.textContent = "❌ Error al conectar con el servidor.";
+      const validar = () => {
+        const valor = input.value.trim();
+        if(!valor)
+        {
+          errorMsg.textContent = "⚠️ Por favor, ingresa un nombre de usuario.";
           errorMsg.style.display = 'block';
-        });
+          return;
+        }
+        else
+        {
+          errorMsg.textContent = "";
+          errorMsg.style.display = 'none';
+        }
+        const userObj = usuariosPermitidos.find(u => u.nombre === valor);
 
-      } else {
-        errorMsg.textContent = "❌ Usuario no autorizado o acceso expirado";
-        errorMsg.style.display = 'block';
-      }
-    };
+        if (userObj && hoy <= userObj.expira) {
+          const ref = firebase.database().ref("usuarios/" + userObj.nombre.toLowerCase());
 
-    // ✅ Eventos para botón e input
-    document.getElementById('btnValidar').addEventListener('click', validar);
-    input.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') validar();
+          // ✅ Verifica si ya hay una sesión activa en Firebase
+          ref.once("value").then(snapshot => {
+            if (snapshot.exists()) {
+              errorMsg.textContent = "⚠️ Este usuario ya inició sesión en otro dispositivo.";
+              errorMsg.style.display = 'block';
+              // ✅ Enviar correo de sesión duplicada mediante EmailJS
+              enviarCorreoSesionDuplicada(userObj.nombre);
+            } else {
+              // ✅ Registrar sesión en Firebase
+              ref.set({
+                activo: true,
+                timestamp: new Date().toLocaleString()
+              });
+
+              // ✅ Guardar sesión local
+              localStorage.setItem("usuarioPermitido", JSON.stringify({ nombre: userObj.nombre }));
+              mostrarUsuario(userObj.nombre);
+              modal.hide();
+            }
+          }).catch(error => {
+            console.error("Error Firebase:", error);
+            errorMsg.textContent = "❌ Error al conectar con el servidor.";
+            errorMsg.style.display = 'block';
+          });
+
+        } else {
+          errorMsg.textContent = "❌ Usuario no autorizado o acceso expirado";
+          errorMsg.style.display = 'block';
+          enviarCorreoCuentaNoAutorizada(valor);
+        }
+      };
+
+      // ✅ Eventos para botón e input
+      document.getElementById('btnValidar').addEventListener('click', validar);
+      input.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') validar();
+      });
     });
-  });
 
-  // ✅ Fusionado cerrarSesion + cerrarSesionFirebase
-  function cerrarSesion() {
-    const sesion = JSON.parse(localStorage.getItem("usuarioPermitido"));
-    if (sesion) {
-      const nombre = sesion.nombre.toLowerCase();
-      firebase.database().ref("usuarios/" + nombre).remove(); // elimina la sesión en Firebase
+    // ✅ Cierre de sesión local y Firebase
+    function cerrarSesion() {
+      const sesion = JSON.parse(localStorage.getItem("usuarioPermitido"));
+      if (sesion) {
+        const nombre = sesion.nombre.toLowerCase();
+        firebase.database().ref("usuarios/" + nombre).remove(); // elimina la sesión en Firebase
+      }
+
+      localStorage.removeItem("usuarioPermitido");
+      location.reload(); // refresca para volver al modal
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+  <script>
+
+    // ✅ Inicializar EmailJS
+    (function () {
+      emailjs.init("w9H4VThWMbzUFi-iJ"); // ⚠️ Reemplaza con tu ID de usuario
+    })();
+
+    // ✅ Enviar correo de sesión duplicada
+    function enviarCorreoSesionDuplicada(usuario) {
+      emailjs.send("service_0uo6jxi", "template_fw2ans4", {
+        usuario: usuario,
+        timestamp: new Date().toLocaleString()
+      })
+        .then(function (response) {
+          console.log("Correo enviado:", response.status);
+        }, function (error) {
+          console.error("Error al enviar correo:", error);
+        });
     }
 
-    localStorage.removeItem("usuarioPermitido");
-    location.reload(); // refresca para volver al modal
-  }
-</script>
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-
-<script>
-  (function () {
-    emailjs.init("w9H4VThWMbzUFi-iJ"); // ⚠️ Reemplaza con tu ID de usuario
-  })();
-
-  function enviarCorreo(usuario) {
-  emailjs.send("service_0uo6jxi", "template_fw2ans4", {
-    usuario: usuario,
-    timestamp: new Date().toLocaleString()
-  })
-  .then(function(response) {
-    console.log("Correo enviado:", response.status);
-  }, function(error) {
-    console.error("Error al enviar correo:", error);
-  });
-}
+    // ✅ Enviar correo de cuenta no autorizada
+    function enviarCorreoCuentaNoAutorizada(usuario) {
+      emailjs.send("service_0uo6jxi", "template_2e7xc2n", {
+        usuario: usuario,
+        timestamp: new Date().toLocaleString()
+      })
+        .then(function (response) {
+          console.log("Correo enviado:", response.status);
+        }, function (error) {
+          console.error("Error al enviar correo:", error);
+        });
+    }
 
 
-// TODO Permitir inicio de sesión en más de un dispositivo
-// TODO Validar canales en base al plan
-</script>
+    // TODO Permitir inicio de sesión en más de un dispositivo
+    // TODO Validar canales en base al plan
+  </script>
 
 
 </body>

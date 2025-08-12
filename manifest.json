@@ -1,6 +1,6 @@
 {
-  "name": "Canales en Vivo",
-  "short_name": "CanalesVivo",
+  "name": "TV Online",
+  "short_name": "TVOnline",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#eceef3",
