@@ -1,0 +1,43 @@
+body {
+    background-color: #eceef3;
+}
+
+.card-custom {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    height: 100%;
+}
+
+.card-custom:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-custom img {
+    height: 180px;
+    width: 100%;
+    object-fit: contain;
+    background-color: #f8f9fa;
+    /* Fondo para que no se vea vacío */
+    padding: 10px;
+}
+
+.card-body {
+    padding: 15px;
+    background-color: #fff;
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.card-text {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
