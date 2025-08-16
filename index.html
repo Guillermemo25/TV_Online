@@ -8,88 +8,11 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="styles/cards.css">
+  <link rel="stylesheet" href="styles/modal.css">
+  <!-- <link rel="manifest" href="manifest.json"> -->
   <meta name="theme-color" content="#007bff">
   <link rel="icon" href="icons/icon-192x192.png">
-
-
-  <style>
-    body {
-      background-color: #eceef3;
-    }
-
-    .card-custom {
-      border: none;
-      border-radius: 12px;
-      overflow: hidden;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-      height: 100%;
-    }
-
-    .card-custom:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .card-custom img {
-      height: 180px;
-      width: 100%;
-      object-fit: contain;
-      background-color: #f8f9fa;
-      /* Fondo para que no se vea vacío */
-      padding: 10px;
-    }
-
-    .card-body {
-      padding: 15px;
-      background-color: #fff;
-    }
-
-    .card-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-
-    .card-text {
-      font-size: 0.9rem;
-      color: #6c757d;
-    }
-
-    .modal-backdrop.show {
-      background-color: rgba(0, 0, 0, 0.8);
-      /* oscurece más */
-      backdrop-filter: blur(6px);
-      /* efecto borroso */
-      -webkit-backdrop-filter: blur(6px);
-      /* compatibilidad Safari */
-    }
-
-    .modal-dialog {
-      max-width: 900px;
-    }
-
-    .modal-body {
-      padding: 0;
-    }
-
-    .video-iframe {
-      width: 100%;
-      height: 500px;
-      border: none;
-    }
-
-    #accessModal input:focus {
-      border-color: #007bff;
-      box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
-    }
-  </style>
-  <!-- Firebase SDK v8 para compatibilidad sin modules -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <!-- Se corrigió a Firebase v8 para que 'firebase' esté definido -->
 </head>
 
 <body>
@@ -98,37 +21,40 @@
     <!-- Seccion de usuario identificado -->
     <div id="user-info" class="d-flex justify-content-end align-items-center gap-2 mb-3" style="display: none;">
       <span id="nombre-usuario" class="text-success fw-semibold"></span>
-      <button onclick="cerrarSesion()" class="btn btn-sm text-danger p-0" title="Cerrar sesión">
+      <button onclick="cerrarSesion();" class="btn btn-sm text-danger p-0" title="Cerrar sesión">
         <span class="bi bi-box-arrow-right"></span>
       </button>
     </div>
-
-    <h2 class="text-center mb-5">🎥 Canales en Vivo</h2>
+    <!-- Sección de encabezado -->
+    <h2 class="text-center mb-5">
+      <span class="bi bi-film"></span> Canales en Vivo
+    </h2>
     <button id="installBtn" class="btn btn-primary" style="display: none;">
-      📲 Instalar App
+      <span class="bi bi-phone"></span> Instalar App
     </button>
+    <!-- Contenedor de tarjetas -->
     <div id="card-container">
       <!-- Secciones con encabezados y filas se generarán aquí -->
     </div>
   </div>
 
   <!-- Modal de video -->
-  <div class="modal fade" id="videoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-xl">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="videoModalLabel">Video en Vivo</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-      </div>
-      <div class="modal-body position-relative">
-        <iframe id="videoFrame" src="javascript:void(0);" class="video-iframe" width="100%" height="500" frameborder="0" scrolling="no"
-          allowfullscreen sandbox="allow-same-origin allow-scripts allow-presentation">
-        </iframe>
+  <div class="modal fade" id="videoModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="videoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="videoModalLabel">Video en Vivo</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body position-relative">
+          <iframe id="videoFrame" src="javascript:void(0);" class="video-iframe" width="100%" height="500"
+            frameborder="0" scrolling="no" allowfullscreen sandbox="allow-same-origin allow-scripts allow-presentation">
+          </iframe>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
 
   <!-- Modal de acceso -->
   <div class="modal fade" id="accessModal" tabindex="-1" aria-labelledby="accessModalLabel" aria-hidden="true"
@@ -150,495 +76,31 @@
     </div>
   </div>
 
-
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-  <script>
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js')
-          .then(reg => console.log('Service Worker registrado:', reg.scope))
-          .catch(err => console.error('Error SW:', err));
-      });
-    }
-
-    let deferredPrompt;
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      // Previene que el navegador muestre el prompt automáticamente
-      e.preventDefault();
-      deferredPrompt = e;
-
-      // Muestra el botón de instalación
-      const installBtn = document.getElementById('installBtn');
-      installBtn.style.display = 'inline-block';
-
-      installBtn.addEventListener('click', () => {
-        // Mostrar el prompt de instalación
-        deferredPrompt.prompt();
-
-        // Esperar la elección del usuario
-        deferredPrompt.userChoice.then(choiceResult => {
-          if (choiceResult.outcome === 'accepted') {
-            console.log('👍 Usuario aceptó la instalación');
-            installBtn.style.display = 'none'; // Ocultar el botón después
-          } else {
-            console.log('👎 Usuario canceló la instalación');
-          }
-          deferredPrompt = null;
-        });
-      });
-    });
-
-    // Evita mostrar el botón si ya está instalada
-    window.addEventListener('appinstalled', () => {
-      console.log('✅ App instalada');
-      document.getElementById('installBtn').style.display = 'none';
-    });
-
-    // 🎬 Datos de los videos
-    const videos = [
-      {
-        id: 1,
-        titulo: "Animal Planet",
-        descripcion: "Canal de documentales sobre animales y naturaleza.",
-        url: "https://embed.saohgdasregions.fun/embed/animalplanet.html",
-        img: "https://upload.wikimedia.org/wikipedia/commons/3/3e/Animal_Planet.png",
-        clasificacion: "Documentales"
-      },
-      {
-        id: 2,
-        titulo: "Discovery Channel",
-        descripcion: "Documentales sobre ciencia, naturaleza y cultura.",
-        url: "https://embed.saohgdasregions.fun/embed/discoverychannel.html",
-        img: "https://images.seeklogo.com/logo-png/4/1/discovery-channel-logo-png_seeklogo-41901.png",
-        clasificacion: "Documentales"
-      },
-      {
-        id: 3,
-        titulo: "History",
-        descripcion: "Canal documental sobre historia y ciencia.",
-        url: "https://embed.saohgdasregions.fun/embed/history.html",
-        img: "https://images.seeklogo.com/logo-png/22/1/the-history-channel-logo-png_seeklogo-222414.png",
-        clasificacion: "Documentales"
-      },
-      {
-        id: 4,
-        titulo: "Nat Geo",
-        descripcion: "Canal de ciencia, naturaleza y exploración.",
-        url: "https://embed.saohgdasregions.fun/embed/natgeo.html",
-        img: "https://thumbs.dreamstime.com/b/national-geographic-channel-logo-vector-format-available-illustrator-ai-national-geographic-channel-logo-148310928.jpg",
-        clasificacion: "Documentales"
-      },
-      {
-        id: 5,
-        titulo: "Azteca Uno",
-        descripcion: "Canal mexicano con programación general.",
-        url: "https://embed.saohgdasregions.fun/embed/aztecauno.html",
-        img: "https://images.seeklogo.com/logo-png/43/2/azteca-uno-logo-png_seeklogo-430704.png",
-        clasificacion: "Entretenimiento"
-      },
-      {
-        id: 6,
-        titulo: "Azteca 7",
-        descripcion: "Canal de televisión mexicana con programación general.",
-        url: "https://embed.saohgdasregions.fun/embed/azteca7.html",
-        img: "https://www.mundoprotegido.com/wp-content/uploads/2023/03/como-ver-azteca-7-en-vivo.png",
-        clasificacion: "Entretenimiento"
-      },
-      {
-        id: 7,
-        titulo: "Canal 5",
-        descripcion: "Canal de entretenimiento con series, películas y caricaturas.",
-        url: "https://embed.saohgdasregions.fun/embed/canal5.html",
-        img: "https://upload.wikimedia.org/wikipedia/commons/0/07/Logotipo-Canal-5-M%C3%A9xico.png",
-        clasificacion: "Entretenimiento"
-      },
-      {
-        id: 8,
-        titulo: "Distrito Comedia",
-        descripcion: "Canal de comedia con programación mexicana.",
-        url: "https://embed.saohgdasregions.fun/embed/distritocomedia.html",
-        img: "https://upload.wikimedia.org/wikipedia/commons/0/09/Logo_Distrito_Comedia.png",
-        clasificacion: "Entretenimiento"
-      },
-      {
-        id: 9,
-        titulo: "Las Estrellas",
-        descripcion: "Canal principal de Televisa con novelas y entretenimiento.",
-        url: "https://embed.saohgdasregions.fun/embed/lasestrellas.html",
-        img: "https://upload.wikimedia.org/wikipedia/commons/4/4f/Las_Estrellas_logo_%282016%29.png",
-        clasificacion: "Entretenimiento"
-      },
-      {
-        id: 10,
-        titulo: "TLNovelas",
-        descripcion: "Canal dedicado a telenovelas mexicanas.",
-        url: "https://embed.saohgdasregions.fun/embed/tlnovelas.html",
-        img: "https://cdn.mitvstatic.com/channels/mx_tlnovelas_m.png",
-        clasificacion: "Entretenimiento"
-      },
-      {
-        id: 11,
-        titulo: "Cartoon Network",
-        descripcion: "Canal de caricaturas y series animadas.",
-        url: "https://embed.saohgdasregions.fun/embed/cartoonnetwork.html",
-        img: "https://upload.wikimedia.org/wikipedia/commons/f/fe/CARTOON_NETWORK_logo.png",
-        clasificacion: "Infantil"
-      },
-      {
-        id: 12,
-        titulo: "Disney Channel",
-        descripcion: "Canal juvenil con series y películas de Disney.",
-        url: "https://embed.saohgdasregions.fun/embed/disneychannel.html",
-        img: "https://cdn.mitvstatic.com/channels/cl_disney-channel_m.png",
-        clasificacion: "Infantil"
-      },
-      {
-        id: 13,
-        titulo: "Disney JR",
-        descripcion: "Canal infantil de Disney para niños pequeños.",
-        url: "https://embed.saohgdasregions.fun/embed/disneyjr.html",
-        img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZWyVcgbta5_RL2K2EPgrPiK-DrW7icmSCNQ&s",
-        clasificacion: "Infantil"
-      },
-      {
-        id: 14,
-        titulo: "Tooncast",
-        descripcion: "Canal de caricaturas clásicas.",
-        url: "https://embed.saohgdasregions.fun/embed/tooncast.html",
-        img: "https://upload.wikimedia.org/wikipedia/commons/6/66/Tooncast.png",
-        clasificacion: "Infantil"
-      },
-      {
-        id: 15,
-        titulo: "ESPN",
-        descripcion: "Canal líder en deportes internacionales.",
-        url: "https://embed.saohgdasregions.fun/embed/espnmexico.html",
-        img: "https://pbs.twimg.com/profile_images/856564125455065089/MAJ4Buek_400x400.jpg",
-        clasificacion: "Deportes"
-      },
-      {
-        id: 16,
-        titulo: "Fox Sports",
-        descripcion: "Canal deportivo con transmisiones en vivo.",
-        url: "https://embed.saohgdasregions.fun/embed/foxsportsmexico.html",
-        img: "https://upload.wikimedia.org/wikipedia/commons/b/b8/Fox_Sports_M%C3%A9xico_Logo_2022.png",
-        clasificacion: "Deportes"
-      },
-      {
-        id: 17,
-        titulo: "Cinemax",
-        descripcion: "Canal de cine con películas de estreno.",
-        url: "https://embed.saohgdasregions.fun/embed/cinemax.html",
-        img: "https://download.logo.wine/logo/Cinemax/Cinemax-Logo.wine.png",
-        clasificacion: "Cine y Series"
-      },
-      {
-        id: 18,
-        titulo: "FX",
-        descripcion: "Canal de series y películas para adultos.",
-        url: "https://embed.saohgdasregions.fun/embed/fx.html",
-        img: "https://images.seeklogo.com/logo-png/30/2/fx-tv-channel-logo-png_seeklogo-307536.png",
-        clasificacion: "Cine y Series"
-      },
-      {
-        id: 19,
-        titulo: "Golden Edge",
-        descripcion: "Canal de películas de acción y suspenso.",
-        url: "https://embed.saohgdasregions.fun/embed/goldenedge.html",
-        img: "https://upload.wikimedia.org/wikipedia/commons/3/32/Golden_Edge_Logo.png",
-        clasificacion: "Cine y Series"
-      },
-      {
-        id: 20,
-        titulo: "Space",
-        descripcion: "Canal de películas de acción, terror y suspenso.",
-        url: "https://embed.saohgdasregions.fun/embed/space.html",
-        img: "https://logos-world.net/wp-content/uploads/2023/03/Space-Logo.png",
-        clasificacion: "Cine y Series"
-      },
-      {
-        id: 21,
-        titulo: "Star Channel",
-        descripcion: "Canal de películas y series populares.",
-        url: "https://embed.saohgdasregions.fun/embed/starchannel.html",
-        img: "https://images.seeklogo.com/logo-png/40/2/star-channel-logo-png_seeklogo-403871.png",
-        clasificacion: "Cine y Series"
-      },
-      {
-        id: 22,
-        titulo: "Studio Universal",
-        descripcion: "Películas y contenido de Universal Studios.",
-        url: "https://embed.saohgdasregions.fun/embed/studiouniversal.html",
-        img: "https://cdn.mitvstatic.com/channels/fd8cde27-1fa8-46f4-a2ff-96436bbe6912_m.jpg",
-        clasificacion: "Cine y Series"
-      },
-      {
-        id: 23,
-        titulo: "TNT",
-        descripcion: "Películas, series y transmisiones en vivo.",
-        url: "https://embed.saohgdasregions.fun/embed/tnt.html",
-        img: "https://upload.wikimedia.org/wikipedia/commons/6/68/Logo_TNT_Series.png",
-        clasificacion: "Cine y Series"
-      },
-      {
-        id: 24,
-        titulo: "Warner Bros",
-        descripcion: "Series y películas de Warner Channel.",
-        url: "https://embed.saohgdasregions.fun/embed/warnerchannel.html",
-        img: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Warner2018LA.png/250px-Warner2018LA.png",
-        clasificacion: "Cine y Series"
-      }
-    ];
-
-    const container = document.getElementById("card-container");
-    const videoFrame = document.getElementById("videoFrame");
-    const videoModal = new bootstrap.Modal(document.getElementById('videoModal'));
-
-    // 1. Agrupar por clasificación
-    const clasificaciones = {};
-
-    videos.forEach(video => {
-      if (!clasificaciones[video.clasificacion]) {
-        clasificaciones[video.clasificacion] = [];
-      }
-      clasificaciones[video.clasificacion].push(video);
-    });
-
-    // 2. Renderizar secciones
-    Object.keys(clasificaciones).sort().forEach(clasificacion => {
-      // Crear título de la sección
-      const sectionTitle = document.createElement("h3");
-      sectionTitle.className = "mt-5 mb-3 text-secondary border-bottom pb-2";
-      sectionTitle.textContent = `📂 ${clasificacion} (${clasificaciones[clasificacion].length} canales)`;
-      container.appendChild(sectionTitle);
-
-      // Crear fila de cards
-      const row = document.createElement("div");
-      row.className = "row";
-
-      clasificaciones[clasificacion].forEach(video => {
-        const col = document.createElement("div");
-        col.className = "col-sm-6 col-md-4 col-lg-3 mb-4";
-
-        col.innerHTML = `
-  <div class="card card-custom h-100" onclick="abrirModal('${video.url}', '${video.titulo}')">
-    <img src="${video.img}" class="card-img-top" alt="${video.titulo}">
-    <div class="card-body">
-      <h5 class="card-title">${video.titulo}</h5>
-      <p class="card-text text-muted">${video.descripcion}</p>
-      <button class="btn btn-sm btn-danger mt-2" onclick="reportarCanal(event, '${video.titulo}')">Reportar</button>
-    </div>
-  </div>
-`;
-
-        row.appendChild(col);
-      });
-
-      container.appendChild(row);
-    });
-
-    // Abrir modal con video
-    function abrirModal(url, titulo) {
-      document.getElementById("videoModalLabel").textContent = titulo;
-      videoFrame.src = url + "?autoplay=1"; // autoplay opcional
-      videoModal.show();
-    }
-
-    // Limpiar el iframe al cerrar el modal
-    document.getElementById('videoModal').addEventListener('hidden.bs.modal', () => {
-      videoFrame.src = "";
-    });
-
-    // Reportar canal por medio de whatsapp
-    function reportarCanal(event, canal) {
-      event.stopPropagation();
-
-      const numero = '5219811241628'; // Tu número con LADA para WhatsApp
-      const mensaje = encodeURIComponent(`🛑 Quiero reportar el canal: ${canal}`);
-      const enlace = `https://wa.me/${numero}?text=${mensaje}`;
-
-      window.open(enlace, '_blank');
-    }
-
-  </script>
-  <script>
-    // Se le pone el día siguiente de su expiración por ejemplo 
-    // El usuario GuillermoCahuich expira solo puede entrar hasta el 31 de agosto
-    // Su expiración debe ser el 1 de septiembre
-    // ✅ Lista de usuarios permitidos
-    const usuariosPermitidos = [
-      { nombre: "GuillermoCahuich", expira: "2100-01-01" },
-      { nombre: "EdilbertoMartinez", expira: "2025-08-15" },
-      { nombre: "IlseArceo", expira: "2100-01-01" },
-      { nombre: "Agosto11", expira: "2025-08-12" },
-      { nombre: "Agosto12", expira: "2025-08-13" },
-      { nombre: "Agosto13", expira: "2025-08-14" },
-      { nombre: "Agosto14", expira: "2025-08-15" },
-      { nombre: "Agosto15", expira: "2025-08-16" },
-      { nombre: "Agosto16", expira: "2025-08-17" },
-      { nombre: "Agosto17", expira: "2025-08-18" },
-      { nombre: "Agosto18", expira: "2025-08-19" },
-      { nombre: "Agosto19", expira: "2025-08-20" },
-      { nombre: "Agosto20", expira: "2025-08-21" },
-      { nombre: "PruebasSeptiembre", expira: "2025-09-01" }
-    ];
-
-    // ✅ Firebase Config
-    const firebaseConfig = {
-      apiKey: "AIzaSyAFLwKrplfCUQ4CEOPECEsvz3l9wCcu1LQ",
-      authDomain: "memorias-familia.firebaseapp.com",
-      projectId: "memorias-familia",
-      storageBucket: "memorias-familia.appspot.com",
-      messagingSenderId: "1031674093779",
-      appId: "1:1031674093779:web:a5767556435cf15e763426"
-    };
-
-    // ✅ Inicializar Firebase
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-    window.addEventListener('DOMContentLoaded', () => {
-      const modalElement = document.getElementById('accessModal');
-      const modal = new bootstrap.Modal(modalElement);
-      const input = document.getElementById('userInput');
-      const errorMsg = document.getElementById('errorMsg');
-      const userInfo = document.getElementById('user-info');
-      const nombreUsuarioSpan = document.getElementById('nombre-usuario');
-      const hoy = new Date().toISOString().split("T")[0];
-
-      // ✅ Función para mostrar el usuario identificado
-      const mostrarUsuario = (nombre) => {
-        nombreUsuarioSpan.textContent = `👤 ${nombre}`;
-        userInfo.style.display = "flex";
-      };
-
-      // ✅ Verificar sesión local
-      const sesionGuardada = JSON.parse(localStorage.getItem("usuarioPermitido"));
-      if (sesionGuardada) {
-        const userObj = usuariosPermitidos.find(u => u.nombre.toUpperCase() === sesionGuardada.nombre.toUpperCase());
-        if (userObj && hoy <= userObj.expira) {
-          mostrarUsuario(userObj.nombre);
-          return;
-        } else {
-          localStorage.removeItem("usuarioPermitido");
-        }
-      }
-
-      // ✅ Mostrar modal si no tiene sesión
-      modal.show();
-
-      const validar = () => {
-        const valor = input.value.trim();
-        if(!valor)
-        {
-          errorMsg.textContent = "⚠️ Por favor, ingresa un nombre de usuario.";
-          errorMsg.style.display = 'block';
-          return;
-        }
-        else
-        {
-          errorMsg.textContent = "";
-          errorMsg.style.display = 'none';
-        }
-        const userObj = usuariosPermitidos.find(u => u.nombre === valor);
-
-        if (userObj && hoy <= userObj.expira) {
-          const ref = firebase.database().ref("usuarios/" + userObj.nombre.toLowerCase());
-
-          // ✅ Verifica si ya hay una sesión activa en Firebase
-          ref.once("value").then(snapshot => {
-            if (snapshot.exists()) {
-              errorMsg.textContent = "⚠️ Este usuario ya inició sesión en otro dispositivo.";
-              errorMsg.style.display = 'block';
-              // ✅ Enviar correo de sesión duplicada mediante EmailJS
-              enviarCorreoSesionDuplicada(userObj.nombre);
-            } else {
-              // ✅ Registrar sesión en Firebase
-              ref.set({
-                activo: true,
-                timestamp: new Date().toLocaleString()
-              });
-
-              // ✅ Guardar sesión local
-              localStorage.setItem("usuarioPermitido", JSON.stringify({ nombre: userObj.nombre }));
-              mostrarUsuario(userObj.nombre);
-              modal.hide();
-            }
-          }).catch(error => {
-            console.error("Error Firebase:", error);
-            errorMsg.textContent = "❌ Error al conectar con el servidor.";
-            errorMsg.style.display = 'block';
-          });
-
-        } else {
-          errorMsg.textContent = "❌ Usuario no autorizado o acceso expirado";
-          errorMsg.style.display = 'block';
-          enviarCorreoCuentaNoAutorizada(valor);
-        }
-      };
-
-      // ✅ Eventos para botón e input
-      document.getElementById('btnValidar').addEventListener('click', validar);
-      input.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') validar();
-      });
-    });
-
-    // ✅ Cierre de sesión local y Firebase
-    function cerrarSesion() {
-      const sesion = JSON.parse(localStorage.getItem("usuarioPermitido"));
-      if (sesion) {
-        const nombre = sesion.nombre.toLowerCase();
-        firebase.database().ref("usuarios/" + nombre).remove(); // elimina la sesión en Firebase
-      }
-
-      localStorage.removeItem("usuarioPermitido");
-      location.reload(); // refresca para volver al modal
-    }
-  </script>
-
+  <!-- Firebase SDK v8 para compatibilidad sin modules -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <!-- EmailJS-->
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-
-  <script>
-
-    // ✅ Inicializar EmailJS
-    (function () {
-      emailjs.init("w9H4VThWMbzUFi-iJ"); // ⚠️ Reemplaza con tu ID de usuario
-    })();
-
-    // ✅ Enviar correo de sesión duplicada
-    function enviarCorreoSesionDuplicada(usuario) {
-      emailjs.send("service_0uo6jxi", "template_fw2ans4", {
-        usuario: usuario,
-        timestamp: new Date().toLocaleString()
-      })
-        .then(function (response) {
-          console.log("Correo enviado:", response.status);
-        }, function (error) {
-          console.error("Error al enviar correo:", error);
-        });
-    }
-
-    // ✅ Enviar correo de cuenta no autorizada
-    function enviarCorreoCuentaNoAutorizada(usuario) {
-      emailjs.send("service_0uo6jxi", "template_2e7xc2n", {
-        usuario: usuario,
-        timestamp: new Date().toLocaleString()
-      })
-        .then(function (response) {
-          console.log("Correo enviado:", response.status);
-        }, function (error) {
-          console.error("Error al enviar correo:", error);
-        });
-    }
-
-    // TODO Permitir inicio de sesión en más de un dispositivo
-    // TODO Validar canales en base al plan
-  </script>
-
+  <!-- Archivo de configuración Firebase -->
+  <script src="scripts/firebase.js"></script>
+  <!-- Archivo del Service Worker -->
+  <script src="scripts/serviceWorker.js"></script>
+  <!-- Archivos de datos de canales -->
+  <script src="scripts/canalesData.js"></script>
+  <!-- Archivos de datos de usuarios -->
+  <script src="scripts/usuariosData.js"></script>
+  <!-- Archivo de instalación como PWA -->
+  <script src="scripts/instalacion.js"></script>
+  <!-- Archivos de conexión a la red de datos o wifi -->
+  <script src="scripts/conexion.js"></script>
+  <!-- Archivo para manejar la sesión del usuario -->
+  <script src="scripts/sesion.js"></script>
+  <!-- Archivo para cargar los canales en la página -->
+  <script src="scripts/loadCanales.js"></script>
+  <!-- Archivo para manejar el envío de correos electrónicos -->
+  <script src="scripts/emailJS.js"></script>
 
 </body>
 

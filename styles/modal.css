@@ -1,0 +1,27 @@
+.modal-backdrop.show {
+    background-color: rgba(0, 0, 0, 0.8);
+    /* oscurece más */
+    backdrop-filter: blur(6px);
+    /* efecto borroso */
+    -webkit-backdrop-filter: blur(6px);
+    /* compatibilidad Safari */
+}
+
+.modal-dialog {
+    max-width: 900px;
+}
+
+.modal-body {
+    padding: 0;
+}
+
+.video-iframe {
+    width: 100%;
+    height: 500px;
+    border: none;
+}
+
+#accessModal input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+}
