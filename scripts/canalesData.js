@@ -1,5 +1,5 @@
 // 🎬 Datos de los videos
-const videos = [
+const canales = [
     {
         id: 1,
         titulo: "Animal Planet",
