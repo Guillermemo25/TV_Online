@@ -29,6 +29,9 @@
     <h2 class="text-center mb-5">
       <span class="bi bi-film"></span> Canales en Vivo
     </h2>
+    <div class="mb-4">
+      <input type="text" id="buscador" class="form-control" placeholder="🔍 Buscar canal..." oninput="renderizarCanalesFiltrados(this.value);">
+    </div>
     <button id="installBtn" class="btn btn-primary" style="display: none;">
       <span class="bi bi-phone"></span> Instalar App
     </button>

@@ -10,7 +10,7 @@
 - [ ] Crear catalogo de planes con cantidad de dispositivos y precios
 - [ ] Permitir inicio de sesión desde múltiples dispositivos de acuerdo a plan
 - [ ] Validar canales disponibles según el plan de usuario
-- [ ] Añadir buscador de canales
+- [x] ✅ Añadir buscador de canales
 - [ ] Mostrar advertencia en Card de canal si este no se encuentra disponible o si fue reportado.
 - [ ] Agregar autoplay y controles adicionales al modal del video.
 - [ ] Mejorar la visibilidad del modal en pantallas pequeñas
