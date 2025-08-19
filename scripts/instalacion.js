@@ -16,9 +16,11 @@ window.addEventListener('beforeinstallprompt', (e) => {
         // Esperar la elección del usuario
         deferredPrompt.userChoice.then(choiceResult => {
             if (choiceResult.outcome === 'accepted') {
+                mostrarNotificacion('✅ App instalada correctamente', 'success');
                 console.log('👍 Usuario aceptó la instalación');
                 installBtn.style.display = 'none'; // Ocultar el botón después
             } else {
+                mostrarNotificacion('❌ Instalación cancelada', 'error');
                 console.log('👎 Usuario canceló la instalación');
             }
             deferredPrompt = null;

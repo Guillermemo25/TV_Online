@@ -15,6 +15,7 @@
 - [ ] Agregar autoplay y controles adicionales al modal del video.
 - [ ] Mejorar la visibilidad del modal en pantallas pequeñas
 - [ ] Usar LocalStorage o Firebase para guardar historial de canales vistos recientemente (Validar si es necesario)
+- [x] ✅ Integrar notificaciones toast
 - [ ] Integrar sistema de notificaciones push
 
 ---
@@ -78,8 +79,8 @@
 
 ## 🧼 CÓDIGO Y MANTENIMIENTO
 
-- [ ] Separar lógica en archivos externos (`auth.js`, `firebase.js`, `videos.js`, etc.).
-- [ ] Documentar todas las funciones en comentarios JSDoc.
+- [x] ✅ Separar lógica en archivos externos (`auth.js`, `firebase.js`, `videos.js`, etc.).
+- [x] ✅ Documentar todas las funciones en comentarios JSDoc.
 - [ ] Mover lista de videos a una base de datos en tiempo real (Firebase o JSON remoto).
 
 ---
