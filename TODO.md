@@ -82,6 +82,7 @@
 - [x] ✅ Separar lógica en archivos externos (`auth.js`, `firebase.js`, `videos.js`, etc.).
 - [x] ✅ Documentar todas las funciones en comentarios JSDoc.
 - [ ] Mover lista de videos a una base de datos en tiempo real (Firebase o JSON remoto).
+- [x] ✅ Se activa aplicación de actualizaciones automática.
 
 ---
 

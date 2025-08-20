@@ -1,4 +1,4 @@
-const CACHE_NAME = 'canales-vivo-cache-v1';
+const CACHE_NAME = 'tv-online-cache-v1';
 const urlsToCache = [
   '.',
   'index.html',
@@ -11,13 +11,33 @@ const urlsToCache = [
   // Agrega aquí otros recursos estáticos que uses
 ];
 
+
+// INSTALACIÓN: Guarda archivos en caché
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(urlsToCache))
   );
+  self.skipWaiting(); // ⚡ Fuerza activación inmediata
 });
 
+// ACTIVACIÓN: Limpia cachés antiguos
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(cacheNames =>
+      Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName); // 🔥 Borra cachés viejos
+          }
+        })
+      )
+    )
+  );
+  self.clients.claim(); // ⚡ Toma control de las páginas sin esperar
+});
+
+// FETCH: Busca en caché o en red
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
