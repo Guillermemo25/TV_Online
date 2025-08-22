@@ -47,13 +47,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
             // ✅ Verifica si ya hay una sesión activa en Firebase
             ref.once("value").then(snapshot => {
-                if (snapshot.exists()) {
+                if (snapshot.exists() && userObj.nombre.toLowerCase() !== "guillermocahuich") {
                     errorMsg.textContent = "⚠️ Este usuario ya inició sesión en otro dispositivo.";
                     errorMsg.style.display = 'block';
                     // ✅ Enviar correo de sesión duplicada mediante EmailJS
                     enviarCorreoSesionDuplicada(userObj.nombre);
                 } else {
-                    // ✅ Registrar sesión en Firebase
+                    // ✅ Registrar sesión en Firebase (aunque ya exista, sobreescribimos si es GuillermoCahuich)
                     ref.set({
                         activo: true,
                         timestamp: new Date().toLocaleString()
