@@ -1,4 +1,4 @@
-const CACHE_NAME = 'tv-online-cache-v1';
+const CACHE_NAME = 'tv-online-cache-v2';
 const urlsToCache = [
   '.',
   'index.html',
